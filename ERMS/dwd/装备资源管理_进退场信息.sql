@@ -19,7 +19,7 @@ create table dwd.dwd_erms_use_entry_exit_info_d
     tech_status            string comment '技术状况',
     equ_data               string comment '设备随机资料',
     entry_exit_status_code string comment '进退场状态编码',
-    entry_exit_name_name   string comment '进退场状态名称',
+    entry_exit_status_name string comment '进退场状态名称',
     mob_basic              string comment '进场依据',
     acceptor_name          string comment '验收人名称',
     transfer_name          string comment '移交人名称',
@@ -48,16 +48,16 @@ create table dwd.dwd_erms_use_entry_exit_info_d
     mtime                  string comment '修改时间',
     allo_output_value      Decimal(20, 6) comment '调配产值',
     group_lease            string comment '集团内租赁进场',
-    mana_unitid            string comment '管理单位id',
-    mana_unitname          string comment '管理单位名称',
-    rent_unitid            string comment '租用单位id',
-    rent_unitname          string comment '租用单位名称',
-    cz_unitid              string comment '出租单位id',
-    cz_unitname            string comment '出租单位名称',
+    mana_unit_id           string comment '管理单位id',
+    mana_unit_name         string comment '管理单位名称',
+    rent_unit_id           string comment '租用单位id',
+    rent_unit_name         string comment '租用单位名称',
+    cz_unit_id             string comment '出租单位id',
+    cz_unit_name           string comment '出租单位名称',
     opp_unit_id            string comment '对方单位id',
     opp_unit_name          string comment '对方单位名称',
-    fill_unitid            string comment '填报单位id',
-    fill_unitname          string comment '填报单位名称',
+    fill_unit_id           string comment '填报单位id',
+    fill_unit_name         string comment '填报单位名称',
     lease_price            Decimal(20, 6) comment '租赁单价',
     manager_code           string comment '管理编号',
     start_date             string comment '开始日期',
@@ -147,16 +147,16 @@ select t1.id                                                  as eeid           
      , t1.mtime                                               as mtime                  --修改时间
      , t1.allo_output_value                                   as allo_output_value      --调配产值
      , t1.group_lease                                         as group_lease            --集团内租赁进场
-     , t1.mana_unit                                           as mana_unitid            --管理单位id
-     , t5.oname                                               as mana_unitname          --管理单位名称
-     , t1.rental_unit                                         as rent_unitid            --租用单位id
-     , t6.oname                                               as rent_unitname          --租用单位名称
-     , t1.cz_unit                                             as cz_unitid              --出租单位id
-     , t7.oname                                               as cz_unitname            --出租单位名称
+     , t1.mana_unit                                           as mana_unit_id           --管理单位id
+     , t5.oname                                               as mana_unit_name         --管理单位名称
+     , t1.rental_unit                                         as rent_unit_id           --租用单位id
+     , t6.oname                                               as rent_unit_name         --租用单位名称
+     , t1.cz_unit                                             as cz_unit_id             --出租单位id
+     , t7.oname                                               as cz_unit_name           --出租单位名称
      , t1.opp_unit                                            as opp_unit_id            --对方单位id
      , t1.opp_unit_name                                       as opp_unit_name          --对方单位名称
-     , t1.formcoid                                            as fill_unitid            --填报单位id
-     , t8.oname                                               as fill_unitname          --填报单位名称
+     , t1.formcoid                                            as fill_unit_id           --填报单位id
+     , t8.oname                                               as fill_unit_name         --填报单位名称
      , t1.lease_price                                         as lease_price            --租赁单价
      , t1.code                                                as manager_code           --管理编号
      , t1.start_date                                          as start_date             --开始日期
