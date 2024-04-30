@@ -50,7 +50,6 @@ create table dwd.dwd_erms_own_fixed_assets_d
     durableyears       string comment '使用年限',
     asscount           Decimal(38, 15) comment '资产数量',
     assused            string comment '资产用途',
-    assno              string comment '资产编号',
     equtype_code       string comment '装备类型编码',
     equtype_name       string comment '装备类型名称',
     state_code         string comment '资产状态编码',
@@ -133,7 +132,6 @@ select a.asid                                                                   
      , a.durableyears                                                                                                                               as durableyears       --使用年限
      , a.asscount                                                                                                                                   as asscount           --资产数量
      , a.assused                                                                                                                                    as assused            --资产用途
-     , a.equnum                                                                                                                                     as assno              --资产编号
      , a.type                                                                                                                                       as equtype_code       --装备类型编码
      , c.equtype_name                                                                                                                               as equtype_name       --装备类型名称(非直取,请注意查看文档进行调整)
      , a.state                                                                                                                                      as state_code         --资产状态编码
@@ -154,4 +152,11 @@ from a
          left join c on a.type = c.equtype_code
          left join d on a.asid = d.asid
 ;
+
+
+
+
+
+
+
 

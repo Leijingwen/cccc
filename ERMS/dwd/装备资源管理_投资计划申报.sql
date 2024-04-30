@@ -34,7 +34,6 @@ create table dwd.dwd_erms_invm_plan_year_apply_d
     STORED AS ORC;
 
 
-
 --装备资源管理_投资计划申报
 with org_rule as (select *
                   from dwd.dim_erms_orgext_d),
@@ -54,7 +53,7 @@ select a.apid                                                                   
      , a.oid                                                                          as own_unit_oid    --所属机构oid
      , org_rule.oname                                                                 as own_unit_name   --所属机构名称(非直取,请注意查看文档进行调整)
      , a.state                                                                        as state_code      --流程状态编码
-     , dict_lczt.diname                                                               as state_name      --流程状态名称(非直取,请注意查看文档进行调整)
+     , dict_lc.diname                                                                 as state_name      --流程状态名称(非直取,请注意查看文档进行调整)
      , a.ctime                                                                        as ctime           --创建时间
      , a.mtime                                                                        as mtime           --修改时间
      , a.note                                                                         as note            --备注
@@ -76,7 +75,8 @@ select a.apid                                                                   
      , 'dim_erms_orgext_d,dim_erms_dictitem_d,ods_cccc_erms_invm_plan_year_apply_i_d' as source_table
 from a
          left join org_rule on a.oid = org_rule.oid
-         left join dict dict_lczt on a.state = dict_lczt.dicode and dict_lczt.dname = '审批结果'
+--          left join dict dict_lc on a.state = dict_lc.dicode and dict_lc.dname = '审批结果'
          left join dict dict_nd on a.yeartype = dict_nd.dicode and dict_nd.dname = '投资年度类型'
          left join dict dict_sp on a.bpmsstatus = dict_sp.dicode and dict_sp.dname = '审批结果'
 ;
+

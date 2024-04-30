@@ -12,16 +12,15 @@ create table dwd.dwd_erms_out_lease_list_d
     equ_num          Decimal(38, 0) comment '数量',
     lease_start_date string comment '租赁开始日期',
     lease_end_date   string comment '租赁结束时间',
-    budget_amount    Decimal(19, 6) comment '预算费用',
+    amount           Decimal(19, 6) comment '预算费用',
     majorequ         string comment '装备分类',
     ctime            string comment '创建时间',
     mtime            string comment '修改时间',
     ovalue           Decimal(19, 6) comment '原值',
     selecttimes      Decimal(38, 15) comment '已关联数量',
     rentaletype_name string comment '租赁状态名称',
-    manager_code             string comment '管理编号',
+    code             string comment '管理编号',
     hadadd_code      string comment '是否已经被选中编码',
-    zproject         string comment '主数据项目id',
     pro_name         string comment '项目名称',
     prosite_code     string comment '项目地点编码',
     pro_start_date   string comment '项目开始日期',
@@ -33,6 +32,7 @@ create table dwd.dwd_erms_out_lease_list_d
     repstate_name    string comment '审批结果名称',
     unitprice        Decimal(19, 6) comment '单价',
     unit             string comment '单位',
+    zproject         string comment '主数据项目id',
     start_date       string comment '开始日期',
     etl_time         string comment 'etl_时间',
     source_system    string comment '来源系统',
@@ -62,7 +62,7 @@ select a.llid                                                                   
      , a.equnum                                                                  as equ_num          --数量
      , a.leasestartdate                                                          as lease_start_date --租赁开始日期
      , a.leaseenddate                                                            as lease_end_date   --租赁结束时间
-     , a.amount                                                                  as budget_amount           --预算费用
+     , a.amount                                                                  as amount           --预算费用
      , a.majorequ                                                                as majorequ         --装备分类
      , a.ctime                                                                   as ctime            --创建时间
      , a.mtime                                                                   as mtime            --修改时间
@@ -71,7 +71,6 @@ select a.llid                                                                   
      , a.rentaletype                                                             as rentaletype_name --租赁状态名称
      , a.code                                                                    as code             --管理编号
      , a.hadadd                                                                  as hadadd_code      --是否已经被选中编码
-     , a.zproject                                                                as zproject         --主数据项目id
      , a.proname                                                                 as pro_name         --项目名称
      , a.prosite                                                                 as prosite_code     --项目地点编码
      , a.prostartdate                                                            as pro_start_date   --项目开始日期
@@ -87,6 +86,7 @@ select a.llid                                                                   
     end                                                                          as repstate_name    --审批结果名称
      , a.unitprice                                                               as unitprice        --单价
      , a.unit                                                                    as unit             --单位
+     , a.zproject                                                                as zproject         --主数据项目id
      , a.start_date                                                              as start_date       --开始日期
      , from_unixtime(unix_timestamp(), 'yyyy-MM-dd HH:mm:ss')                    as etl_time
      , 'ERMS'                                                                    as source_system
