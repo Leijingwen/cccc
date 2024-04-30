@@ -100,130 +100,135 @@ create table dwd.dwd_erms_own_equ_pub_assetsinfo_d
 
 
 --装备资源管理_基础信息_自有装备公用信息
-with mapping as (select *
-                 from dwd.dim_erms_equip_type_mapping_d),
-     pub as (select *
+with t1 as (select *
              from ods.ods_cccc_erms_base_pub_assetsinfo_i_d
              where end_date = '2999-12-31'
                and isdelete != '1'),
-     org_rule as (select *
-                  from dwd.dim_erms_orgext_d),
+    mapping as (select *
+                 from dwd.dim_erms_equip_type_mapping_d),
+     org as (select oid
+                  , oname
+                  , second_unit_id
+                  , second_unit_name
+                  , third_unit_id
+                  , third_unit_name
+             from dwd.dim_erms_orgext_d),
      dict as (select dname, dicode, diname from dwd.dim_erms_dictitem_d where dname in ('币种', '后评价当前环节'))
 -- insert overwrite table dwd.dwd_erms_own_equ_pub_assetsinfo_d partition ( etl_date = '${etl_date}' )
-select pub.mastercode                                                                                              as equ_mastercode           --装备主数据编码
-     , pub.asid                                                                                                    as asid                     --资产id
-     , pub.equcode                                                                                                 as equcode                  --装备编码(赋码后)
-     , pub.cnname                                                                                                  as equ_cnname               --装备中文名称
-     , pub.enname                                                                                                  as equ_enname               --装备英文名称
-     , pub.equtype                                                                                                 as equtype_code             --装备类型编码
+select t1.mastercode                                                                                              as equ_mastercode           --装备主数据编码
+     , t1.asid                                                                                                    as asid                     --资产id
+     , t1.equcode                                                                                                 as equcode                  --装备编码(赋码后)
+     , t1.cnname                                                                                                  as equ_cnname               --装备中文名称
+     , t1.enname                                                                                                  as equ_enname               --装备英文名称
+     , t1.equtype                                                                                                 as equtype_code             --装备类型编码
      , mapping.equtype_name                                                                                        as equtype_name             --装备类型名称(非直取,请注意查看文档进行调整)
-     , pub.financial_code                                                                                          as financial_code           --财务编码
-     , pub.type                                                                                                    as equ_class_name           --装备分类名称
-     , pub.code                                                                                                    as ascode                   --资产编号
-     , pub.fcode                                                                                                   as fcode                    --出厂编号
-     , pub.manufacturer                                                                                            as manufacturer_name        --建造/生产厂家名称
-     , pub.designunit                                                                                              as designunit_name          --设计单位名称
-     , pub.buydate                                                                                                 as buydate                  --购买日期
-     , pub.exfdate                                                                                                 as exfdate                  --出厂日期
-     , pub.model                                                                                                   as model                    --规格型号
-     , pub.ovalue                                                                                                  as ovalue                   --原值
-     , pub.ovalueyb                                                                                                as ovalueyb                 --原值（原币）
-     , pub.nvalue                                                                                                  as nvalue                   --净值
-     , pub.nvalueyb                                                                                                as nvalueyb                 --净值（原币）
-     , pub.equstate                                                                                                as equstate_code            --装备状态编码
+     , t1.financial_code                                                                                          as financial_code           --财务编码
+     , t1.type                                                                                                    as equ_class_name           --装备分类名称
+     , t1.code                                                                                                    as ascode                   --资产编号
+     , t1.fcode                                                                                                   as fcode                    --出厂编号
+     , t1.manufacturer                                                                                            as manufacturer_name        --建造/生产厂家名称
+     , t1.designunit                                                                                              as designunit_name          --设计单位名称
+     , t1.buydate                                                                                                 as buydate                  --购买日期
+     , t1.exfdate                                                                                                 as exfdate                  --出厂日期
+     , t1.model                                                                                                   as model                    --规格型号
+     , t1.ovalue                                                                                                  as ovalue                   --原值
+     , t1.ovalueyb                                                                                                as ovalueyb                 --原值（原币）
+     , t1.nvalue                                                                                                  as nvalue                   --净值
+     , t1.nvalueyb                                                                                                as nvalueyb                 --净值（原币）
+     , t1.equstate                                                                                                as equstate_code            --装备状态编码
      , case
-           when pub.equstate = '00' then '调遣'
-           when pub.equstate = '01' then '施工'
-           when pub.equstate = '02' then '闲置'
-           when pub.equstate = '03' then '修理'
-           when pub.equstate = '04' then '待命'
-           when pub.equstate = '05' then '封存'
-           when pub.equstate = '06' then '改造'
-           when pub.equstate = '08' then '让售'
-           when pub.equstate = '09' then '报废'
+           when t1.equstate = '00' then '调遣'
+           when t1.equstate = '01' then '施工'
+           when t1.equstate = '02' then '闲置'
+           when t1.equstate = '03' then '修理'
+           when t1.equstate = '04' then '待命'
+           when t1.equstate = '05' then '封存'
+           when t1.equstate = '06' then '改造'
+           when t1.equstate = '08' then '让售'
+           when t1.equstate = '09' then '报废'
     end                                                                                                            as equstate_name            --装备状态名称(非直取,请注意查看文档进行调整)
-     , pub.location                                                                                                as location_code            --所在地编码
-     , pub.LOCATIONNAME                                                                                            as location_name            --所在地名称
-     , pub.ability                                                                                                 as ability                  --能力
-     , pub.ownoid                                                                                                  as own_unit_oid             --权属单位oid
-     , pub.owncoid                                                                                                 as own_unit_coid            --权属单位coid
-     , pub.ownname                                                                                                 as own_unit_name            --权属单位名称
+     , t1.location                                                                                                as location_code            --所在地编码
+     , t1.LOCATIONNAME                                                                                            as location_name            --所在地名称
+     , t1.ability                                                                                                 as ability                  --能力
+     , t1.ownoid                                                                                                  as own_unit_oid             --权属单位oid
+     , t1.owncoid                                                                                                 as own_unit_coid            --权属单位coid
+     , t1.ownname                                                                                                 as own_unit_name            --权属单位名称
      , own.second_unit_id                                                                                          as own_second_unit_id       --权属二级单位id(非直取,请注意查看文档进行调整)
      , own.second_unit_name                                                                                        as own_second_unit_name     --权属二级单位名称(非直取,请注意查看文档进行调整)
      , own.third_unit_id                                                                                           as own_third_unit_id        --权属三级单位id(非直取,请注意查看文档进行调整)
      , own.third_unit_name                                                                                         as own_third_unit_name      --权属三级单位名称(非直取,请注意查看文档进行调整)
-     , pub.conoid                                                                                                  as manage_unit_oid          --管理单位oid
-     , pub.concoid                                                                                                 as manage_unit_coid         --管理单位coid
-     , pub.conname                                                                                                 as manage_unit_name         --管理单位名称
+     , t1.conoid                                                                                                  as manage_unit_oid          --管理单位oid
+     , t1.concoid                                                                                                 as manage_unit_coid         --管理单位coid
+     , t1.conname                                                                                                 as manage_unit_name         --管理单位名称
      , con.second_unit_id                                                                                          as manager_second_unit_id   --管理二级单位id(非直取,请注意查看文档进行调整)
      , con.second_unit_name                                                                                        as manager_second_unit_name --管理二级单位名称(非直取,请注意查看文档进行调整)
      , con.third_unit_id                                                                                           as manager_third_unit_id    --管理三级单位id(非直取,请注意查看文档进行调整)
      , con.third_unit_name                                                                                         as manager_third_unit_name  --管理三级单位名称(非直取,请注意查看文档进行调整)
-     , pub.useid                                                                                                   as use_unit_oid             --使用单位oid
-     , pub.usecoid                                                                                                 as use_unit_coid            --使用单位coid
-     , pub.usename                                                                                                 as use_unit_name            --使用单位名称
+     , t1.useid                                                                                                   as use_unit_oid             --使用单位oid
+     , t1.usecoid                                                                                                 as use_unit_coid            --使用单位coid
+     , t1.usename                                                                                                 as use_unit_name            --使用单位名称
      , use_org.second_unit_id                                                                                      as use_second_unit_id       --使用二级单位id(非直取,请注意查看文档进行调整)
      , use_org.second_unit_name                                                                                    as use_second_unit_name     --使用二级单位名称(非直取,请注意查看文档进行调整)
      , use_org.third_unit_id                                                                                       as use_third_unit_id        --使用三级单位id(非直取,请注意查看文档进行调整)
      , use_org.third_unit_name                                                                                     as use_third_unit_name      --使用三级单位名称(非直取,请注意查看文档进行调整)
-     , pub.outuseid                                                                                                as outuse_unit_oid          --外部使用单位oid
-     , pub.outusename                                                                                              as outuse_unit_name         --外部使用单位名称
-     , pub.evapplyoid                                                                                              as evapply_unit_oid         --评价申请单位oid
-     , pub.evapplyoname                                                                                            as evapply_unit_oname       --评价申请单位名称
-     , pub.equpurpose                                                                                              as equpurpose               --装备用途
-     , pub.invtype                                                                                                 as invtype_code             --投资方式编码
+     , t1.outuseid                                                                                                as outuse_unit_oid          --外部使用单位oid
+     , t1.outusename                                                                                              as outuse_unit_name         --外部使用单位名称
+     , t1.evapplyoid                                                                                              as evapply_unit_oid         --评价申请单位oid
+     , t1.evapplyoname                                                                                            as evapply_unit_oname       --评价申请单位名称
+     , t1.equpurpose                                                                                              as equpurpose               --装备用途
+     , t1.invtype                                                                                                 as invtype_code             --投资方式编码
      , case
-           when pub.invtype = '1' then '建造'
-           when pub.invtype = '2' then '购买'
-           when pub.invtype = '3' then '改造'
+           when t1.invtype = '1' then '建造'
+           when t1.invtype = '2' then '购买'
+           when t1.invtype = '3' then '改造'
     end                                                                                                            as invtype_name             --投资方式名称(非直取,请注意查看文档进行调整)
-     , pub.meteringunit                                                                                            as meteringunit             --计量单位
-     , pub.billcode                                                                                                as billcode                 --验收单编号
-     , pub.billname                                                                                                as billname                 --验收单名称
-     , pub.contractcode                                                                                            as contractcode             --合同编号
-     , pub.contractname                                                                                            as contractname             --合同名称
-     , pub.iccode                                                                                                  as iccode                   --检验合格证编号
-     , pub.mmsinumber                                                                                              as mmsinumber               --mmsi号码
-     , pub.datasource                                                                                              as datasource_name          --数据来源名称
-     , pub.codestate                                                                                               as codestate_code           --赋码状态编码
+     , t1.meteringunit                                                                                            as meteringunit             --计量单位
+     , t1.billcode                                                                                                as billcode                 --验收单编号
+     , t1.billname                                                                                                as billname                 --验收单名称
+     , t1.contractcode                                                                                            as contractcode             --合同编号
+     , t1.contractname                                                                                            as contractname             --合同名称
+     , t1.iccode                                                                                                  as iccode                   --检验合格证编号
+     , t1.mmsinumber                                                                                              as mmsinumber               --mmsi号码
+     , t1.datasource                                                                                              as datasource_name          --数据来源名称
+     , t1.codestate                                                                                               as codestate_code           --赋码状态编码
      , case
-           when pub.codestate = '0' then '未赋码'
-           when pub.codestate = '1' then '已赋码'
+           when t1.codestate = '0' then '未赋码'
+           when t1.codestate = '1' then '已赋码'
     end                                                                                                            as codestate_name           --赋码状态名称(非直取,请注意查看文档进行调整)
-     , pub.asfile                                                                                                  as asfile_name              --附件名称
-     , pub.plid                                                                                                    as plid                     --计划ID
-     , pub.plname                                                                                                  as plname                   --计划名称
-     , pub.pappid                                                                                                  as pappid                   --立项id
-     , pub.pappname                                                                                                as pappname                 --立项名称
-     , pub.ppcid                                                                                                   as ppcid                    --关联立项子表id
-     , pub.mainreasons                                                                                             as mainreasons              --主要原因
-     , pub.evapplydate                                                                                             as evapplydate              --评价申请日期
-     , pub.billstate                                                                                               as billstate_code           --单据状态编码
-     , dict_hpj.diname                                                                                              as billstate_name           --单据状态名称
-     , pub.majorequ                                                                                                as majorequ                 --是否重大
-     , pub.endfileid                                                                                               as endfileid                --最终报告附件id
-     , pub.ispush                                                                                                  as ispush                   --是否推送财务云
-     , pub.ysoid                                                                                                   as ysoid                    --预算oid
-     , pub.bz                                                                                                      as bz_code                  --币种编码
-     , dict_bz.diname                                                                                              as bz_name                  --币种名称
-     , pub.noo                                                                                                     as noo                      --新旧系数
-     , pub.note                                                                                                    as note                     --备注
-     , pub.pushtime                                                                                                as pushtime                 --推送时间
-     , pub.acceptancetime                                                                                          as acceptancetime           --验收时间
-     , pub.rettime                                                                                                 as rettime                  --主数据编码返回时间
-     , pub.codetime                                                                                                as codetime                 --赋码时间
-     , pub.ctime                                                                                                   as ctime                    --创建时间
-     , pub.mtime                                                                                                   as mtime                    --修改时间
-     , pub.ywmtime                                                                                                 as ywmtime                  --运维-修改时间
-     , pub.start_date                                                                                              as start_date               --开始日期
+     , t1.asfile                                                                                                  as asfile_name              --附件名称
+     , t1.plid                                                                                                    as plid                     --计划ID
+     , t1.plname                                                                                                  as plname                   --计划名称
+     , t1.pappid                                                                                                  as pappid                   --立项id
+     , t1.pappname                                                                                                as pappname                 --立项名称
+     , t1.ppcid                                                                                                   as ppcid                    --关联立项子表id
+     , t1.mainreasons                                                                                             as mainreasons              --主要原因
+     , t1.evapplydate                                                                                             as evapplydate              --评价申请日期
+     , t1.billstate                                                                                               as billstate_code           --单据状态编码
+     , hpj.diname                                                                                                  as billstate_name           --单据状态名称
+     , t1.majorequ                                                                                                as majorequ                 --是否重大
+     , t1.endfileid                                                                                               as endfileid                --最终报告附件id
+     , t1.ispush                                                                                                  as ispush                   --是否推送财务云
+     , t1.ysoid                                                                                                   as ysoid                    --预算oid
+     , t1.bz                                                                                                      as bz_code                  --币种编码
+     , bz.diname                                                                                                   as bz_name                  --币种名称
+     , t1.noo                                                                                                     as noo                      --新旧系数
+     , t1.note                                                                                                    as note                     --备注
+     , t1.pushtime                                                                                                as pushtime                 --推送时间
+     , t1.acceptancetime                                                                                          as acceptancetime           --验收时间
+     , t1.rettime                                                                                                 as rettime                  --主数据编码返回时间
+     , t1.codetime                                                                                                as codetime                 --赋码时间
+     , t1.ctime                                                                                                   as ctime                    --创建时间
+     , t1.mtime                                                                                                   as mtime                    --修改时间
+     , t1.ywmtime                                                                                                 as ywmtime                  --运维-修改时间
+     , t1.start_date                                                                                              as start_date               --开始日期
      , from_unixtime(unix_timestamp(), 'yyyy-MM-dd HH:mm:ss')                                                      as etl_time
      , 'ERMS'                                                                                                      as source_system
-     , 'dim_erms_equip_type_mapping_d,ods_cccc_erms_base_pub_assetsinfo_i_d,dim_erms_orgext_d,dim_erms_dictitem_d' as source_table
-from pub
-         left join mapping on pub.equtype = mapping.equtype_code
-         left join org_rule own on pub.ownoid = own.oid
-         left join org_rule con on pub.conoid = con.oid
-         left join org_rule use_org on pub.useid = use_org.oid
-         left join dict dict_bz on pub.bz = dict_bz.dicode and dict_bz.dname = '币种'
-         left join dict dict_hpj on pub.billstate = dict_hpj.dicode and dict_hpj.dname = '后评价当前环节'
+     , 'ods_cccc_erms_base_pub_assetsinfo_i_d,dim_erms_equip_type_mapping_d,dim_erms_orgext_d,dim_erms_dictitem_d' as source_table
+from t1
+         left join mapping on t1.equtype = mapping.equtype_code
+         left join org own on t1.ownoid = own.oid
+         left join org con on t1.conoid = con.oid
+         left join org use_org on t1.useid = use_org.oid
+         left join dict bz on t1.bz = bz.dicode and bz.dname = '币种'
+         left join dict hpj on t1.billstate = hpj.dicode and hpj.dname = '后评价当前环节'
 ;
