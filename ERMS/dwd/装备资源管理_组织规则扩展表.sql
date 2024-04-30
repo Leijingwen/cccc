@@ -72,6 +72,3 @@ from (select oid,
          left join ods.ods_cccc_erms_waf_ac_organ_f_d org3
                    on org_rule.third_unit_id = org3.oid;
 
-
-
-select * from dwd.dim_erms_orgext_d;
