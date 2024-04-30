@@ -99,7 +99,3 @@ select t1.id                                                  as psid           
 from t1
          left join t2
 ;
-
-SELECT * FROM stg.STG_CCCC_ERMS_INVM_PLAN_YEAR_PLAN_SUPPLY_I_D;
-
-SELECT * FROM `dwd`.dim_erms_dictitem_d WHERE dname = '审批结果';
