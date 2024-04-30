@@ -18,7 +18,7 @@ create table dwd.dwd_erms_invm_plan_proapply_d
     approve_state_name string comment '审批状态名称',
     procinstid         string comment '流程实例ID，为了匹配任务表',
     attid_plan         string comment '附件_投资立项申请报告',
-    own_unit_coid      string comment '所属机构id',
+    own_unit_id        string comment '所属机构id',
     own_unit_name      string comment '所属单位名称',
     majorequ           string comment '装备分类',
     endfinishwork      Decimal(8, 4) comment '累计工程量计划完成比(%)',
@@ -77,8 +77,8 @@ select t1.pappid                                                                
      , t3.diname                                                                                as approve_state_name --审批状态名称
      , t1.procinstid                                                                            as procinstid         --流程实例ID，为了匹配任务表
      , t1.attid_plan                                                                            as attid_plan         --附件_投资立项申请报告
-     , t1.coid                                                                                  as own_unitid         --所属机构id
-     , t1.oidname                                                                               as own_unitname       --所属单位名称
+     , t1.coid                                                                                  as own_unit_id        --所属机构id
+     , t1.oidname                                                                               as own_unit_name      --所属单位名称
      , t1.majorequ                                                                              as majorequ           --装备分类
      , t1.endfinishwork                                                                         as endfinishwork      --累计工程量计划完成比(%)
      , t1.endfinishamount                                                                       as endfinishamount    --累计完成投资金额(万元)

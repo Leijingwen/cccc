@@ -1,3 +1,4 @@
+drop table dwd.dwd_erms_invm_proapply_approval_d;
 create table dwd.dwd_erms_invm_proapply_approval_d
 (
     pfid          string comment '批复id',
@@ -8,8 +9,8 @@ create table dwd.dwd_erms_invm_proapply_approval_d
     pappid        string comment '投资立项id',
     ctime         string comment '创建时间',
     mtime         string comment '修改时间',
-    unit_id       string comment '所属单位id',
-    unit_name     string comment '所属单位名称',
+    own_unit_id   string comment '所属单位id',
+    own_unit_name string comment '所属单位名称',
     start_date    string comment '开始日期',
     etl_time      string comment 'etl_时间',
     source_system string comment '来源系统',
@@ -37,17 +38,17 @@ with t1 as (select *
               from dwd.dim_erms_dictitem_d
               WHERE dname in ('投资立项状态'))
 -- insert overwrite table dwd.dwd_erms_invm_proapply_approval_d partition(etl_date = '${etl_date}')
-select t1.pfid                                                                          as pfid         --批复id
-     , t1.pftitle                                                                       as pftitle      --批复标题
-     , t1.procinstid                                                                    as procinstid   --流程实例id
-     , t1.pfstate                                                                       as pfstate_code --审批状态编码
-     , dict.diname                                                                      as pfstate_name --审批状态名称
-     , t1.pappid                                                                        as pappid       --投资立项id
-     , t1.ctime                                                                         as ctime        --创建时间
-     , t1.mtime                                                                         as mtime        --修改时间
-     , t1.coid                                                                          as unit_id      --所属单位id
-     , org.oname                                                                        as unit_name    --所属单位名称
-     , t1.start_date                                                                    as start_date   --开始日期
+select t1.pfid                                                                          as pfid          --批复id
+     , t1.pftitle                                                                       as pftitle       --批复标题
+     , t1.procinstid                                                                    as procinstid    --流程实例id
+     , t1.pfstate                                                                       as pfstate_code  --审批状态编码
+     , dict.diname                                                                      as pfstate_name  --审批状态名称
+     , t1.pappid                                                                        as pappid        --投资立项id
+     , t1.ctime                                                                         as ctime         --创建时间
+     , t1.mtime                                                                         as mtime         --修改时间
+     , t1.coid                                                                          as own_unit_id   --所属单位id
+     , org.oname                                                                        as own_unit_name --所属单位名称
+     , t1.start_date                                                                    as start_date    --开始日期
      , from_unixtime(unix_timestamp(), 'yyyy-MM-dd HH:mm:ss')                           as etl_time
      , 'ERMS'                                                                           as source_system
      , 'ods_cccc_erms_invm_proapply_approval_i_d,dim_erms_orgext_d,dim_erms_dictitem_d' as source_table
