@@ -45,7 +45,6 @@ create table dwd.dwd_erms_rent_equinfo_d
     codestate_code           string comment '赋码状态编码',
     codestate_name           string comment '赋码状态名称',
     asfile_name              string comment '附件名称',
-    equipcode                string comment '装备编码(弃用)',
     rentamountyb             Decimal(19, 6) comment '租赁金额（原币）',
     rentamount               Decimal(19, 6) comment '租赁金额（元）',
     bz_code                  string comment '币种编码',
@@ -81,8 +80,8 @@ with mapping as (select *
      rent_equ as (select *
                   from ods.ods_cccc_erms_master_rentalequip_i_d
                   where end_date = '2999-12-31' and isdelete != '1'),
-     org_rule as (select * from dwd.dim_erms_orgext_d),
-     dict as (select dname, dicode, diname from dwd.dim_erms_dictitem_d where dname = '币种')
+    org_rule as (select * from dwd.dim_erms_orgext_d),
+    dict as (select dname, dicode, diname from dwd.dim_erms_dictitem_d where dname = '币种')
 -- insert overwrite table dwd.dwd_erms_rent_equinfo_d partition(etl_date = '${etl_date}')
 select NULL                                                                                                       as equ_mastercode           --装备主数据编码(非直取,请注意查看文档进行调整)
      , rent_equ.rsid                                                                                              as rsid                     --租赁装备id
@@ -141,7 +140,6 @@ select NULL                                                                     
            when rent_equ.codestate = '1' then '已赋码'
     end                                                                                                           as codestate_name           --赋码状态名称(非直取,请注意查看文档进行调整)
      , rent_equ.rsfile                                                                                            as asfile_name              --附件名称
-     , rent_equ.equipcode                                                                                         as equipcode                --装备编码(弃用)
      , rent_equ.rentamountyb                                                                                      as rentamountyb             --租赁金额（原币）
      , rent_equ.rentamount                                                                                        as rentamount               --租赁金额（元）
      , rent_equ.bz                                                                                                as bz_code                  --币种编码
