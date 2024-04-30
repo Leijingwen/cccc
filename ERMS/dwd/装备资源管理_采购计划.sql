@@ -53,7 +53,8 @@ with dict as (select dcode, dname, dicode, diname
               where dname in ('采购方式', '采购分类','')),
      t1 as (select *
             from ods.ods_cccc_erms_invm_plan_year_plan_supply_i_d
-            where end_date = '2999-12-31')
+            where end_date = '2999-12-31'
+              and isdelete != '1')
 --insert overwrite table dwd.dwd_erms_invm_plan_year_plan_supply_d partition(etl_date = '${etl_date}')
 select t1.id                                                  as psid            --采购id
      , t1.year                                                as year            --年份
