@@ -13,7 +13,7 @@ create table dwd.dwd_erms_deploy_apply_d
     deployinpro_name  string comment '调入项目名称',
     zprojectout       string comment '调出项目主数据编码',
     zprojectin        string comment '调入项目主数据编码',
-    equamount         Decimal(38, 0) comment '装备数量',
+    equnum            Decimal(38, 0) comment '装备数量',
     deploycost        Decimal(19, 2) comment '调配费用',
     range             Decimal(38, 0) comment '距离',
     curnode_code      string comment '当前节点编码',
@@ -63,7 +63,7 @@ select t1.daid                                                as daid           
      , t1.deployinpro                                         as deployinpro_name  --调入项目名称
      , t1.zprojectout                                         as zprojectout       --调出项目主数据编码
      , t1.zprojectin                                          as zprojectin        --调入项目主数据编码
-     , t1.equamount                                           as equamount         --装备数量
+     , t1.equamount                                           as equnum            --装备数量
      , t1.deploycost                                          as deploycost        --调配费用
      , t1.range                                               as range             --距离
      , t1.curnode                                             as curnode_code      --当前节点编码
