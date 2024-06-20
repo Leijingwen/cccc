@@ -14,10 +14,7 @@ SELECT T.*,
            ELSE T.WORK_INIT_DATE END                          as WORK_INIT_DATE1,
     /*参加工作时间*/
        CASE
-           COALESCE(TRIM(REPLACE(T.SCH_REC_CODE, '　', ' ')), '20')
-           WHEN '0' THEN '20'
-           WHEN '01' THEN '20'
-           WHEN '1' THEN '20'
+           WHEN COALESCE(TRIM(REPLACE(T.SCH_REC_CODE, '　', ' ')), '20') in ('0', '01', '1') THEN '20'
            ELSE COALESCE(TRIM(REPLACE(T.SCH_REC_CODE, '　', ' ')), '20')
            END                                                as SCH_REC_CODE1,
        COALESCE(TRIM(REPLACE(T.PER_SOU_CODE, '　', ' ')), '9') as PER_SOU_CODE1,
